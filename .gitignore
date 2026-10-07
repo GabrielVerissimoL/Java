@@ -11,3 +11,7 @@ target/
 
 # Logs
 *.log
+
+# Pastas do Postman
+.postman/
+postman/
