@@ -15,3 +15,5 @@ target/
 # Pastas do Postman
 .postman/
 postman/
+
+oracleJdk-25/
