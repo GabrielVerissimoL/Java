@@ -5,20 +5,21 @@ import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import jakarta.annotation.Generated;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Data;
 
-@Data
-@Entity(name = "tb_user")
+@Data //Getters e Setters
+@Entity(name = "tb_user") //Gera uma tabela com o nome indicado
 public class UserModel {
     
     @Id
     @GeneratedValue(generator = "UUID") 
     private UUID id;
     
+    @Column(unique = true) //Username vai ser uma coluna com valor único, nao repete
     private String username;
     private String name;
     private String password;
