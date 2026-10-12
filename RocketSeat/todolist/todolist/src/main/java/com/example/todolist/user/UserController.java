@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 @RestController
 @RequestMapping("/users")   //Define a rota padrão dessa classe, o que chegar nessa rota vem para ca  
 public class UserController {
@@ -22,9 +24,16 @@ public class UserController {
         
         //Erro na criação (Usuário já existe)
         if (this.userRepository.findByUsername(userModel.getUsername()) != null) {
-            System.out.println("Usuário já existente!");
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já existe"); 
         }
+
+        //Gerando o hash da senha e colocando em uma variável
+        var PasswordHash = BCrypt.withDefaults()
+        .hashToString(12, userModel.getPassword().toCharArray());
+
+        //Utilizando método set para realmente utilizar o hash como senha
+        userModel.setPassword(PasswordHash);
 
         var userCreated = this.userRepository.save(userModel);
 
