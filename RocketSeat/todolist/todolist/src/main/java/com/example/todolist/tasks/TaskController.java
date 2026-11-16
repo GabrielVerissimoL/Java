@@ -1,17 +1,20 @@
 package com.example.todolist.tasks;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 
 @RestController 
 @RequestMapping("/tasks")
@@ -26,6 +29,7 @@ public class TaskController {
         taskModel.setIdUser((UUID) idUser);
 
 
+        // Verifica com base na data se a task está bem formada
         var currentDate = LocalDateTime.now();
         if (currentDate.isAfter(taskModel.getStartAt()) || currentDate.isBefore(taskModel.getEndAt())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A data de início/término deve ser superior do que a atual");
@@ -36,5 +40,13 @@ public class TaskController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(this.taskRepository.save(taskModel));
+    }
+
+    
+    @GetMapping("/")
+    public List<TaskModel> list(HttpServletRequest request) {
+        var idUser = request.getAttribute("idUser");
+        var tasks = this.taskRepository.findByIdUser((UUID) idUser); // Pega a lista de taskrepository das tarefas de um usuário
+        return tasks;
     }
 }
